@@ -62,9 +62,9 @@ fun LoginScreen(){
         val username = remember { mutableStateOf(TextFieldValue()) }
         val password = remember { mutableStateOf(TextFieldValue()) }
 
-        Text(text = "Login", style = TextStyle(fontSize = 45.sp, fontFamily = FontFamily.Default, ))
+        Text(text = "Login", style = TextStyle(fontSize = 45.sp, fontFamily = FontFamily.Default))
 
-        Spacer(modifier = Modifier.height(35.dp))
+        Spacer(modifier = Modifier.height(80.dp))
         TextField(
             label = { Text(text = "Email") },
             value = username.value,
