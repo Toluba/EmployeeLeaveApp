@@ -13,6 +13,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import com.example.employeeleaveapp.BottomNav.NavBar
 import com.example.employeeleaveapp.ui.theme.EmployeeLeaveAppTheme
 
@@ -35,7 +36,7 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun topBar() {
+fun TopBar() {
     TopAppBar(title = {
         Text(
             text = "My Important Dates",
