@@ -1,7 +1,6 @@
 package com.example.employeeleaveapp.home
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -23,30 +22,30 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.employeeleaveapp.BottomNav.NavBar
+import com.example.employeeleaveapp.Navigation.NavBar
+import com.example.employeeleaveapp.Navigation.TopBar
 import com.example.employeeleaveapp.ui.theme.BlueDark
 import com.example.employeeleaveapp.ui.theme.BlueLight
 import com.example.employeeleaveapp.ui.theme.Circle
 
-//TODO - fix days balance positioning
+
 //TODO - Fix navigations and onclicks
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen() {
     Scaffold(
-        topBar = {},
-        bottomBar = {
-            NavBar()
-        },
-        content = { Box(modifier = Modifier.padding(it))
-
+        topBar = { TopBar(title = "Home") },
+        bottomBar = { NavBar() },
+        // content = { Box(modifier = Modifier.padding(it))
+    ) {
+        Column(modifier = Modifier.padding(it)) {
             RemainingLeave(heading = "Leave Balance") { }
         }
-    )
-
+    }
 
 }
+
 
 @Composable
 fun RemainingLeave(
@@ -132,6 +131,6 @@ fun RemainingLeavePreview() {
 
 @Preview
 @Composable
-fun HomeScreenPreview(){
+fun HomeScreenPreview() {
     HomeScreen()
 }
