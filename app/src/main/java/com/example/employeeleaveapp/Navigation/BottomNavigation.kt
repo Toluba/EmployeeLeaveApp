@@ -1,4 +1,4 @@
-package com.example.employeeleaveapp.BottomNav
+package com.example.employeeleaveapp.Navigation
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Create
@@ -30,7 +30,7 @@ val bottomNavItems = listOf(
     ),
     BottomNavItem(
         title = "Calender",
-        route = "teamcalendar",
+        route = "team-calendar",
         icon = Icons.Filled.DateRange,
     ),
     BottomNavItem(
