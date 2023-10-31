@@ -4,9 +4,12 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -22,8 +25,6 @@ import com.example.employeeleaveapp.home.HomeScreen
 import com.example.employeeleaveapp.requests.RequestScreen
 import com.example.employeeleaveapp.settings.SettingScreen
 import com.example.employeeleaveapp.ui.theme.Calendar
-import com.example.employeeleaveapp.Navigation.NavBar
-import com.example.employeeleaveapp.Navigation.TopBar
 import com.example.employeeleaveapp.ui.theme.EmployeeLeaveAppTheme
 import com.example.employeeleaveapp.ui.theme.Home
 import com.example.employeeleaveapp.ui.theme.Request
@@ -31,7 +32,6 @@ import com.example.employeeleaveapp.ui.theme.Settings
 import com.example.employeeleaveapp.ui.theme.employeeLeaveBottomBar
 
 class MainActivity : ComponentActivity() {
-    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -46,21 +46,31 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
             val currentBackStack by navController.currentBackStackEntryAsState()
             val currentDestination = currentBackStack?.destination
-            val currentScreen =  employeeLeaveBottomBar.find {it.route == currentDestination?.route } ?: Home
+            val currentScreen =
+                employeeLeaveBottomBar.find { it.route == currentDestination?.route } ?: Home
 
             Scaffold(
+                modifier = Modifier,
                 bottomBar = {
                     NavBar(
                         allScreens = employeeLeaveBottomBar,
                         onTabSelected = { newScreen ->
-                            navController.navigateSingleTopTo(route = newScreen.route)},
+                            navController.navigateSingleTopTo(route = newScreen.route)
+                        },
                         currentScreen = currentScreen,
                     )
                 },
                 topBar = {
-                    TopAppBar(title = { /*TODO*/ })
-                }
-            ) { innerPadding ->
+                    CenterAlignedTopAppBar(
+                        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                            containerColor = MaterialTheme.colorScheme.primaryContainer,
+                            titleContentColor = MaterialTheme.colorScheme.primary,
+                        ),
+                        title = {Text("Home") }
+                    )
+                },
+
+                ) { innerPadding ->
                 NavHost(
                     navController = navController,
                     startDestination = Home.route,
