@@ -22,6 +22,8 @@ import com.example.employeeleaveapp.home.HomeScreen
 import com.example.employeeleaveapp.requests.RequestScreen
 import com.example.employeeleaveapp.settings.SettingScreen
 import com.example.employeeleaveapp.ui.theme.Calendar
+import com.example.employeeleaveapp.Navigation.NavBar
+import com.example.employeeleaveapp.Navigation.TopBar
 import com.example.employeeleaveapp.ui.theme.EmployeeLeaveAppTheme
 import com.example.employeeleaveapp.ui.theme.Home
 import com.example.employeeleaveapp.ui.theme.Request
