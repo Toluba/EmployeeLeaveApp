@@ -4,12 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -22,6 +18,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.employeeleaveapp.bottomNav.NavBar
 import com.example.employeeleaveapp.calendar.CalendarScreen
 import com.example.employeeleaveapp.home.HomeScreen
+import com.example.employeeleaveapp.navigation.TopBar
 import com.example.employeeleaveapp.requests.RequestScreen
 import com.example.employeeleaveapp.settings.SettingScreen
 import com.example.employeeleaveapp.ui.theme.Calendar
@@ -38,6 +35,8 @@ class MainActivity : ComponentActivity() {
             EmployeeLeaveApp()
         }
     }
+    //TODO - move navigation from mainActivity into NavHost File
+    //'TODO - move
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
@@ -61,13 +60,14 @@ class MainActivity : ComponentActivity() {
                     )
                 },
                 topBar = {
-                    CenterAlignedTopAppBar(
-                        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                            containerColor = MaterialTheme.colorScheme.primaryContainer,
-                            titleContentColor = MaterialTheme.colorScheme.primary,
-                        ),
-                        title = {Text("Home") }
-                    )
+                         TopBar()
+//                    CenterAlignedTopAppBar(
+//                        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+//                            containerColor = MaterialTheme.colorScheme.primaryContainer,
+//                            titleContentColor = MaterialTheme.colorScheme.primary,
+//                        ),
+//                        title = {Text("Home") }
+//                    )
                 },
 
                 ) { innerPadding ->
