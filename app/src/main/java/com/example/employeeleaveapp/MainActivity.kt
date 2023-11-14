@@ -3,6 +3,7 @@ package com.example.employeeleaveapp
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -18,12 +19,15 @@ import androidx.navigation.compose.rememberNavController
 import com.example.employeeleaveapp.bottomNav.NavBar
 import com.example.employeeleaveapp.calendar.CalendarScreen
 import com.example.employeeleaveapp.home.HomeScreen
+import com.example.employeeleaveapp.login.LoginScreen
+import com.example.employeeleaveapp.login.UserViewModel
 import com.example.employeeleaveapp.navigation.TopBar
 import com.example.employeeleaveapp.requests.RequestScreen
 import com.example.employeeleaveapp.settings.SettingScreen
 import com.example.employeeleaveapp.ui.theme.Calendar
 import com.example.employeeleaveapp.ui.theme.EmployeeLeaveAppTheme
 import com.example.employeeleaveapp.ui.theme.Home
+import com.example.employeeleaveapp.ui.theme.Login
 import com.example.employeeleaveapp.ui.theme.Request
 import com.example.employeeleaveapp.ui.theme.Settings
 import com.example.employeeleaveapp.ui.theme.employeeLeaveBottomBar
@@ -73,9 +77,12 @@ class MainActivity : ComponentActivity() {
                 ) { innerPadding ->
                 NavHost(
                     navController = navController,
-                    startDestination = Home.route,
+                    startDestination = Login.route,
                     modifier = Modifier.padding(innerPadding),
                 ) {
+                    composable(route = Login.route){
+                        LoginScreen( navController = navController)
+                    }
                     composable(route = Home.route) {
                         HomeScreen()
                     }

@@ -8,8 +8,8 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.ui.graphics.vector.ImageVector
 
 interface EmployeeLeaveDestination {
-    val title: String
-    val icon: ImageVector
+    val title: String?
+    val icon: ImageVector?
     val route: String
 }
 
@@ -38,6 +38,12 @@ object Settings : EmployeeLeaveDestination {
     override val icon = Icons.Filled.Settings
     override val route = "settings"
 
+}
+
+object Login : EmployeeLeaveDestination {
+    override val title = null
+    override val icon = null
+    override val route: String = "login"
 }
 
 

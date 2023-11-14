@@ -1,5 +1,7 @@
 package com.example.employeeleaveapp.bottomNav
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.WarningAmber
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -18,13 +20,13 @@ fun NavBar(
             NavigationBarItem(
                 icon = {
                     Icon(
-                        imageVector = screen.icon,
+                        imageVector = screen.icon ?: Icons.Outlined.WarningAmber,
                         contentDescription = "${screen.title} Icon"
                     )
                 },
                 selected = currentScreen == screen,
                 onClick = {onTabSelected(screen)},
-                label = { Text(text = screen.title) },
+                label = { Text(text = screen.title ?: " ") },
             )
         }
     }

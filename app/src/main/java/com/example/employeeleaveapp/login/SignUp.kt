@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.employeeleaveapp.components.ButtonComponent
 import com.example.employeeleaveapp.components.HeadingTextComponent
 import com.example.employeeleaveapp.components.MyTextFieldComponent
@@ -26,6 +27,7 @@ import com.example.employeeleaveapp.components.PasswordTextFieldComponent
 
 @Composable
 fun SignUpScreen(
+    userViewModel: UserViewModel,
     modifier: Modifier = Modifier
 ){
     Surface(
@@ -43,7 +45,7 @@ fun SignUpScreen(
             MyTextFieldComponent(labelValue = "Email", Icons.Outlined.Email)
             PasswordTextFieldComponent(labelValue = "Password", Icons.Outlined.Lock)
             Spacer(modifier.height(30.dp))
-            ButtonComponent(value = "Register")
+            ButtonComponent(value = "Register",onClick ={} /* { NavController.navigate("login")}*/)
 
         }
     }
@@ -52,5 +54,5 @@ fun SignUpScreen(
 @Preview
 @Composable
 fun SignUpScreenPreview(){
-    SignUpScreen()
+    //SignUpScreen()
 }
