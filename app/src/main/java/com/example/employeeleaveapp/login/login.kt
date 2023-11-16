@@ -30,6 +30,7 @@ import com.example.employeeleaveapp.components.HeadingTextComponent
 import com.example.employeeleaveapp.components.MyTextFieldComponent
 import com.example.employeeleaveapp.components.NormalTextComponent
 import com.example.employeeleaveapp.components.PasswordTextFieldComponent
+import com.example.employeeleaveapp.ui.theme.Home
 
 //TODO - add navigation into the onclicks etc
 
@@ -43,7 +44,7 @@ fun LoginScreen(
 ) {
     val loggedIn by userViewModel.loggedIn.collectAsState()
     if (loggedIn){
-        navController.navigate("login")
+        navController.navigate(Home.route)
     }
     LoginScreenContent(userViewModel)
 }

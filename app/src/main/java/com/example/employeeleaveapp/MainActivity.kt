@@ -4,11 +4,19 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -51,27 +59,40 @@ class MainActivity : ComponentActivity() {
             val currentDestination = currentBackStack?.destination
             val currentScreen =
                 employeeLeaveBottomBar.find { it.route == currentDestination?.route } ?: Home
+            val bottomBarVisibility = rememberSaveable { (mutableStateOf(false)) }
+            val topBarVisibility = rememberSaveable { (mutableStateOf(false)) }
+            val topBarText = rememberSaveable { (mutableStateOf("")) }
 
             Scaffold(
                 modifier = Modifier,
                 bottomBar = {
-                    NavBar(
-                        allScreens = employeeLeaveBottomBar,
-                        onTabSelected = { newScreen ->
-                            navController.navigateSingleTopTo(route = newScreen.route)
-                        },
-                        currentScreen = currentScreen,
+                    AnimatedVisibility(
+                        visible = bottomBarVisibility.value,
+                        content = {
+                            NavBar(
+                                allScreens = employeeLeaveBottomBar,
+                                onTabSelected = { newScreen ->
+                                    navController.navigateSingleTopTo(route = newScreen.route)
+                                },
+                                currentScreen = currentScreen,
+                            )
+                        }
                     )
                 },
                 topBar = {
-                         TopBar()
-//                    CenterAlignedTopAppBar(
-//                        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-//                            containerColor = MaterialTheme.colorScheme.primaryContainer,
-//                            titleContentColor = MaterialTheme.colorScheme.primary,
-//                        ),
-//                        title = {Text("Home") }
-//                    )
+                    // TopBar()
+                    AnimatedVisibility(
+                        visible = topBarVisibility.value,
+                        content = {
+                            CenterAlignedTopAppBar(
+                                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                                    titleContentColor = MaterialTheme.colorScheme.primary,
+                                ),
+                                title = { Text(topBarText.value) }
+                            )
+                        }
+                    )
                 },
 
                 ) { innerPadding ->
@@ -79,20 +100,46 @@ class MainActivity : ComponentActivity() {
                     navController = navController,
                     startDestination = Login.route,
                     modifier = Modifier.padding(innerPadding),
+                    // bottomBarVisibility = bottomBarVisibility,
                 ) {
-                    composable(route = Login.route){
-                        LoginScreen( navController = navController)
+                    composable(route = Login.route) {
+                        LaunchedEffect(null) {
+                            bottomBarVisibility.value = Login.bottomBarVisibility
+                            topBarVisibility.value = Login.topBarVisibility
+                            topBarText.value = Login.title
+                        }
+                        LoginScreen(navController = navController)
                     }
                     composable(route = Home.route) {
+                        LaunchedEffect(null) {
+                            bottomBarVisibility.value = Home.bottomBarVisibility
+                            topBarVisibility.value = Home.topBarVisibility
+                            topBarText.value = Home.title
+                        }
                         HomeScreen()
                     }
                     composable(route = Request.route) {
+                        LaunchedEffect(null) {
+                            bottomBarVisibility.value = Request.bottomBarVisibility
+                            topBarVisibility.value = Request.topBarVisibility
+                            topBarText.value = Request.title
+                        }
                         RequestScreen()
                     }
                     composable(route = Calendar.route) {
+                        LaunchedEffect(null) {
+                            bottomBarVisibility.value = Calendar.bottomBarVisibility
+                            topBarVisibility.value = Calendar.topBarVisibility
+                            topBarText.value = Calendar.title
+                        }
                         CalendarScreen()
                     }
                     composable(route = Settings.route) {
+                        LaunchedEffect(null) {
+                            bottomBarVisibility.value = Settings.bottomBarVisibility
+                            topBarVisibility.value = Settings.topBarVisibility
+                            topBarText.value = Settings.title
+                        }
                         SettingScreen()
                     }
                 }
