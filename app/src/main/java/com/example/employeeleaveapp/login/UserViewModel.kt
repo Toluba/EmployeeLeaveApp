@@ -27,6 +27,7 @@ class UserViewModel(private val usersRepository: UserRepo) : ViewModel(){
         val user = usersRepository.getUser(email, password)
         //user?.let { _loggedIn.value = true }
        _loggedIn.value = true
+        //TODO - don't forget about this
     }
 
     fun onLoginClick(email: String, password: String){
