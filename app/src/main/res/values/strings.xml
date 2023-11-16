@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">EmployeeLeaveApp</string>
+    <string name="topBar_home">Home</string>
+    <string name="topBar_calendar_title">Team Calendar</string>
+    <string name="topBar_requests">Request Leave</string>
+    <string name="topBar_settings">Settings</string>
 </resources>
