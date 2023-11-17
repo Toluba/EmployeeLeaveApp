@@ -1,12 +1,12 @@
 package com.example.employeeleaveapp.data
 
-class UsersRepository(private val userDao: UserDao): UserRepo {
+class UsersRepository(private val userLeaveDao: UserLeaveDao): UserRepo {
     override suspend fun addUser(user: User){
-        userDao.addUser(user)
+        userLeaveDao.addUser(user)
     }
 
    override suspend fun getUser(email:String, password: String): User?{
-        return userDao.getUser(email, password)
+        return userLeaveDao.getUser(email, password)
     }
 }
 
