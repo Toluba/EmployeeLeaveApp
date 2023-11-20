@@ -2,8 +2,6 @@ package com.example.employeeleaveapp.requests
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,8 +13,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.outlined.DateRange
-import androidx.compose.material3.Button
-import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DateRangePicker
 import androidx.compose.material3.DateRangePickerState
 import androidx.compose.material3.ElevatedButton
@@ -25,13 +21,17 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SelectableDates
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDateRangePickerState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,9 +43,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.employeeleaveapp.components.HeadingTextComponent
 import com.example.employeeleaveapp.components.LeaveTypeDropdown
-import com.waseefakhtar.doseapp.extension.toFormattedDateString
+import com.example.employeeleaveapp.extension.toFormattedDateString
+import com.example.employeeleaveapp.login.UserLeaveViewModel
+import kotlinx.coroutines.launch
 import java.util.Calendar
 
 //TODO - fix date title
@@ -54,220 +57,131 @@ import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RequestScreen() {
-    val state = rememberDateRangePickerState()
+fun RequestScreen(
+    userLeaveViewModel: UserLeaveViewModel = viewModel(factory = UserLeaveViewModel.Factory),
+) {
+    val snackbarHostState = remember { SnackbarHostState() }
+    val snackbarVisible = userLeaveViewModel.snackbarVisible.collectAsState()
+    val coroutineScope = rememberCoroutineScope()
     val sheetState = rememberModalBottomSheetState()
     var showBottomSheet by remember { mutableStateOf(false) }
-    val coroutineScope = rememberCoroutineScope()
-    val interactionSource = remember { MutableInteractionSource() }
-    val today = Calendar.getInstance()
-    today.set(Calendar.HOUR_OF_DAY, 0)
-    today.set(Calendar.MINUTE, 0)
-    today.set(Calendar.SECOND, 0)
-    today.set(Calendar.MILLISECOND, 0)
-    val currentDayMillis = today.timeInMillis
     val dateRangePickerState = rememberDateRangePickerState(
         initialSelectedStartDateMillis = System.currentTimeMillis(),
         initialSelectedEndDateMillis = null,
         selectableDates = object : SelectableDates {
             override fun isSelectableDate(utcTimeMillis: Long): Boolean {
-                return utcTimeMillis >= currentDayMillis
+                return utcTimeMillis >= getCurrentDayMillis()
             }
         }
     )
-    var startDate by rememberSaveable {
+
+
+    var startDateMillis by rememberSaveable {
         mutableStateOf(
-            dateRangePickerState.selectedStartDateMillis?.toFormattedDateString() ?: ""
+            dateRangePickerState.selectedStartDateMillis
         )
     }
-    var endDate by rememberSaveable {
+    var endDateMillis by rememberSaveable {
         mutableStateOf(
-            dateRangePickerState.selectedEndDateMillis?.toFormattedDateString() ?: ""
+            dateRangePickerState.selectedEndDateMillis
         )
     }
 
-    Surface(modifier = Modifier.background(color = Color.Blue)) {
-        Column(
+    Scaffold(
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
+        },
+    ) {
+        Surface(
             modifier = Modifier
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-
+                .background(color = Color.Blue)
+                .padding(it)
         ) {
-            HeadingTextComponent(value = "Input Leave request")
-            Spacer(modifier = Modifier.height(30.dp))
 
-            ElevatedCard {
-                LeaveTypeDropdown("Type of Leave")
-                Spacer(modifier = Modifier.height(10.dp))
-                OutlinedTextField(
-                    modifier = Modifier.fillMaxWidth(),
-                    readOnly = true,
-                    value = "$startDate - $endDate",
-                    onValueChange = {},
-                    trailingIcon = { Icon(Icons.Outlined.DateRange, "", Modifier.clickable { showBottomSheet = true }) },
-                    //interactionSource = interactionSource,
-                    label = { Text("Start Date - End Date") }
-                )
+            if (snackbarVisible.value) {
+                LaunchedEffect(key1 = Unit, block = {
+                    coroutineScope.launch {
+                        snackbarHostState.showSnackbar("Leave Request submitted")
+                    }
+                })
+            }
 
-                Spacer(modifier = Modifier.height(10.dp))
-                var text by remember { mutableStateOf("") }
+            Column(
+                modifier = Modifier
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
 
-                OutlinedTextField(
-                    modifier = Modifier.fillMaxWidth(),
-                    value = text,
-                    onValueChange = { text = it },
-                    label = { Text("Notes") }
-                )
-
-
+            ) {
+                HeadingTextComponent(value = "Input Leave request")
                 Spacer(modifier = Modifier.height(30.dp))
-                ElevatedButton(onClick = { /*TODO*/ }) {
-                    Text("Submit")
-                }
 
-                if (showBottomSheet) {
-                    ModalBottomSheet(
-                        onDismissRequest = {
-                            showBottomSheet = false
+                ElevatedCard {
+                    LeaveTypeDropdown("Type of Leave")
+                    Spacer(modifier = Modifier.height(10.dp))
+                    OutlinedTextField(
+                        modifier = Modifier.fillMaxWidth(),
+                        readOnly = true,
+                        value = "${startDateMillis?.toFormattedDateString() ?: ""} - ${endDateMillis?.toFormattedDateString() ?: ""}",
+                        onValueChange = {},
+                        trailingIcon = {
+                            Icon(
+                                Icons.Outlined.DateRange,
+                                "",
+                                Modifier.clickable { showBottomSheet = true })
                         },
-                        sheetState = sheetState,
-                        content = {
-                            LeaveDateRangePicker(
-                                state = dateRangePickerState,
-                                onConfirmClicked = { selectedStartDateInMillis, selectedEndDateInMillis ->
-                                    startDate = selectedStartDateInMillis.toFormattedDateString()
-                                    endDate = selectedEndDateInMillis.toFormattedDateString()
-                                    showBottomSheet = false
-                                },
-                            )
-                        },
-                        scrimColor = Color.Black.copy(alpha = 0.5f),
-                        shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
+                        //interactionSource = interactionSource,
+                        label = { Text("Start Date - End Date") }
                     )
+
+                    Spacer(modifier = Modifier.height(30.dp))
+                    ElevatedButton(onClick = {
+                        userLeaveViewModel.onRequestSubmit(
+                            startDateMillis,
+                            endDateMillis
+                        )
+                    }
+
+                    ) {
+                        Text("Submit")
+                    }
+
+                    if (showBottomSheet) {
+                        ModalBottomSheet(
+                            onDismissRequest = {
+                                showBottomSheet = false
+                            },
+                            sheetState = sheetState,
+                            content = {
+                                LeaveDateRangePicker(
+                                    state = dateRangePickerState,
+                                    onConfirmClicked = { selectedStartDateInMillis, selectedEndDateInMillis ->
+                                        startDateMillis = selectedStartDateInMillis
+                                        endDateMillis = selectedEndDateInMillis
+                                        showBottomSheet = false
+                                    },
+                                )
+                            },
+                            scrimColor = Color.Black.copy(alpha = 0.5f),
+                            shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
+                        )
+                    }
                 }
             }
         }
+
+
     }
-
-
 }
 
-@Composable
-fun ScreenContent() {
-
-}
-
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun DateTextField(/*endDate: (Long) -> Unit*/) {
-
-    var shouldDisplay by remember { mutableStateOf(false) }
-    val interactionSource = remember { MutableInteractionSource() }
-    val isPressed: Boolean by interactionSource.collectIsPressedAsState()
-    if (isPressed) {
-        shouldDisplay = true
-    }
-
+private fun getCurrentDayMillis(): Long {
     val today = Calendar.getInstance()
     today.set(Calendar.HOUR_OF_DAY, 0)
     today.set(Calendar.MINUTE, 0)
     today.set(Calendar.SECOND, 0)
     today.set(Calendar.MILLISECOND, 0)
-    val currentDayMillis = today.timeInMillis
-    val dateRangePickerState = rememberDateRangePickerState(
-        initialSelectedStartDateMillis = System.currentTimeMillis(),
-        initialSelectedEndDateMillis = null,
-        selectableDates = object : SelectableDates {
-            override fun isSelectableDate(utcTimeMillis: Long): Boolean {
-                return utcTimeMillis >= currentDayMillis
-            }
-        }
-    )
-
-
-//TODO- fix date
-    var startDate by rememberSaveable {
-        mutableStateOf(
-            dateRangePickerState.selectedStartDateMillis?.toFormattedDateString() ?: ""
-        )
-    }
-    var endDate by rememberSaveable {
-        mutableStateOf(
-            dateRangePickerState.selectedEndDateMillis?.toFormattedDateString() ?: ""
-        )
-    }
-
-    OutlinedTextField(
-        modifier = Modifier.fillMaxWidth(),
-        //readOnly = true,
-        value = "$startDate - $endDate",
-        onValueChange = {},
-        trailingIcon = { Icon(Icons.Outlined.DateRange, "") },
-        interactionSource = interactionSource,
-        label = { Text("Start Date - End Date") }
-    )
-
-
+    return today.timeInMillis
 }
 
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun DatePickerDialog(
-    state: DateRangePickerState,
-    shouldDisplay: Boolean,
-    onConfirmClicked: (selectedStartDateMillis: Long, selectedEndDateMillis: Long) -> Unit,
-    dismissRequest: () -> Unit
-) {
-    if (shouldDisplay) {
-        DatePickerDialog(
-            onDismissRequest = dismissRequest,
-            confirmButton = {
-                Button(
-                    modifier = Modifier.padding(0.dp, 0.dp, 8.dp, 0.dp),
-                    onClick = {
-                        //                        state.selectedStartDateMillis?.let {
-                        //                            onConfirmClicked(it)
-                        //                        }}
-                        if (state.selectedStartDateMillis != null && state.selectedEndDateMillis != null) {
-                            onConfirmClicked(
-                                state.selectedStartDateMillis!!,
-                                state.selectedEndDateMillis!!
-                            )
-                        }
-                        dismissRequest()
-                    }
-                ) {
-                    Text(text = "ok")
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = dismissRequest) {
-                    Text(text = "cancel")
-                }
-            },
-            content = {
-                DateRangePicker(
-                    state = state,
-                    showModeToggle = false,
-                    headline = {
-                        //                        (if(state.selectedStartDateMillis!=null) state.selectedStartDateMillis?.toFormattedDateString() else "Start Date")?.let { Text(text = it) }
-                        //
-                        //                        (if(state.selectedEndDateMillis!=null) state.selectedEndDateMillis?.toFormattedDateString() else "End Date")?.let {Text(text = it)}
-
-                        state.selectedEndDateMillis?.toFormattedDateString()?.let {
-                            Text(
-                                modifier = Modifier.padding(start = 16.dp),
-                                text = it
-                            )
-                        }
-                    }
-                )
-            }
-        )
-    }
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

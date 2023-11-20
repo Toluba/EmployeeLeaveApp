@@ -38,19 +38,19 @@ import com.example.employeeleaveapp.ui.theme.Home
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
-    userViewModel: UserViewModel = viewModel(factory = UserViewModel.Factory),
+    userLeaveViewModel: UserLeaveViewModel = viewModel(factory = UserLeaveViewModel.Factory),
     navController: NavController,
     //modifier: Modifier = Modifier
 ) {
-    val loggedIn by userViewModel.loggedIn.collectAsState()
+    val loggedIn by userLeaveViewModel.loggedIn.collectAsState()
     if (loggedIn){
         navController.navigate(Home.route)
     }
-    LoginScreenContent(userViewModel)
+    LoginScreenContent(userLeaveViewModel)
 }
 
 @Composable
-private fun LoginScreenContent(userViewModel: UserViewModel) {
+private fun LoginScreenContent(userLeaveViewModel: UserLeaveViewModel) {
     Surface(
         color = Color.White,
         modifier = Modifier
@@ -69,7 +69,7 @@ private fun LoginScreenContent(userViewModel: UserViewModel) {
             Spacer(modifier = Modifier.height(80.dp))
             ButtonComponent(
                 value = "Login",
-                onClick = { userViewModel.onLoginClick("tom@aol.com", "hello") }
+                onClick = { userLeaveViewModel.onLoginClick("tom@aol.com", "hello") }
             )
 
             Spacer(modifier = Modifier.height(20.dp))

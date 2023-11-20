@@ -13,17 +13,12 @@ interface UserLeaveDao {
 
 
     @Query("SELECT * FROM users WHERE email = :email AND password = :password")
-    suspend fun getUser(email: String?="", password: String): User?
+    suspend fun getUser(email: String? = "", password: String): User?
 
-//    @Query(
-//        """
-//            SELECT *
-//            FROM medicationentity
-//            WHERE endDate > :date
-//        """
-//    )
-//    fun getMedicationsForDate(date: Date): Flow<List<MedicationEntity>>
 
-@Query("SELECT * FROM leave WHERE startDate >=  :startDate AND endDate <= :endDate")
-suspend fun getLeave(startDate: Date, endDate: Date): List<Leave>
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun addLeave(leave: Leave)
+
+    @Query("SELECT * FROM leave WHERE startDate >=  :startDate AND endDate <= :endDate")
+    suspend fun getLeave(startDate: Date, endDate: Date): List<Leave>
 }

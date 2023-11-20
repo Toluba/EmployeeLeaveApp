@@ -2,7 +2,6 @@ package com.example.employeeleaveapp.data
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.util.Date
 
 
 @Entity(tableName = "users")
@@ -19,8 +18,8 @@ data class Leave(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val email: String,
-    val startDate: Date,
-    val endDate: Date,
+    val startDate: Long,
+    val endDate: Long,
     val typeOfLeave: TypeOfLeave,
 )
 
