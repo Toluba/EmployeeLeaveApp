@@ -5,17 +5,6 @@ import com.example.employeeleaveapp.data.LeaveEntity
 import com.example.employeeleaveapp.data.UserLeaveEntity
 
 
-//fun LeaveEntity.toLeave(): Leave {
-//    return Leave(
-//        id = id,
-//        email = email,
-//        startDate = startDate,
-//        endDate = endDate,
-//        typeOfLeave = typeOfLeave,
-//        firstName = "",
-//        lastName = ""
-//    )
-//}
 fun UserLeaveEntity.toLeave(): Leave {
     return Leave(
         id = id,

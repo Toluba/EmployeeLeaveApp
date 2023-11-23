@@ -53,5 +53,4 @@ fun SignUpScreen(
 @Preview
 @Composable
 fun SignUpScreenPreview(){
-    //SignUpScreen()
 }

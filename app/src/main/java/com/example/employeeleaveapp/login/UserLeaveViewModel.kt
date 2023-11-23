@@ -30,9 +30,6 @@ class UserLeaveViewModel(private val usersRepository: UserRepo) : ViewModel() {
     private val _leaves = MutableStateFlow<List<Leave>>(emptyList())
     val leaves: StateFlow<List<Leave>>
         get() = _leaves
-//    init {
-//        loadLeaveRequest()
-//    }
 
    fun signupUser(user: User) {
        viewModelScope.launch(Dispatchers.IO) {
@@ -69,15 +66,6 @@ class UserLeaveViewModel(private val usersRepository: UserRepo) : ViewModel() {
         }
     }
 
-//    private val _isLeaveRequestSaved = MutableSharedFlow<Unit>()
-//    val isLeaveRequestSaved = _isLeaveRequestSaved.asSharedFlow()
-//
-//    fun addLeave( state: LeaveConfirmState) {
-//        viewModelScope.launch {
-//            val leave = state.leave
-//            val leaveAdded = usersRepository.addLeave(leave)
-//            _isLeaveRequestSaved.emit(leaveAdded)
-//        }
 
 
     fun loadLeaveRequest(selectedDate: Date) {

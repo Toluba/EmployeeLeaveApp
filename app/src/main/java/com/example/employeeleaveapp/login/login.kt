@@ -20,7 +20,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -41,7 +40,6 @@ import com.example.employeeleaveapp.ui.theme.Home
 fun LoginScreen(
     userLeaveViewModel: UserLeaveViewModel = viewModel(factory = UserLeaveViewModel.Factory),
     navController: NavController,
-    //modifier: Modifier = Modifier
 ) {
     val loggedIn by userLeaveViewModel.loggedIn.collectAsState()
     if (loggedIn) {
@@ -97,11 +95,4 @@ private fun LoginScreenContent(userLeaveViewModel: UserLeaveViewModel) {
             )
         }
     }
-}
-
-
-@Preview
-@Composable
-fun LoginScreenPreview() {
-    // LoginScreen(userViewModel = UserViewModel())
 }

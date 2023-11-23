@@ -47,27 +47,19 @@ fun CalendarScreen(
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         val viewState = userLeaveViewModel.leaves
-//        DailyLeave(viewState, userLeaveViewModel::loadLeaveRequest)
         DailyLeave(userLeaveViewModel, userLeaveViewModel::loadLeaveRequest)
 
     }
 }
 
 @Composable
-//fun DailyLeave(state: CalendarState, loadLeaveRequest: (Date) -> Unit) {
     fun DailyLeave(vm: UserLeaveViewModel, loadLeaveRequest: (Date) -> Unit) {
     val filteredLeaveRequestEntities by vm.leaves.collectAsState()
 
 
     DatesHeader { selectedDate ->
-       // val newLeaveList = state.leaveEntityList
-//        val newLeaveList = loadLeaveRequest()
-//            .filter { leave ->
-//                leave.startDate.toFormattedDateString() == selectedDate.date.toFormattedDateString()
-//            }
-//            .sortedBy { it.startDate }
         loadLeaveRequest(selectedDate.date)
-//        filteredLeaveRequestEntities = newLeaveList
+
     }
 
     if (filteredLeaveRequestEntities.isEmpty()) {
