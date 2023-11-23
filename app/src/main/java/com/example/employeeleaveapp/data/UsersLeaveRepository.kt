@@ -26,8 +26,16 @@ class UsersRepository(private val userLeaveDao: UserLeaveDao) : UserRepo {
 //        }
     }
 
-    override fun getLeave(selectedDate: Date): Flow<List<Leave>> {
-        return userLeaveDao.getLeave(
+//    override fun getLeave(selectedDate: Date): Flow<List<Leave>> {
+//        return userLeaveDao.getLeave(
+//            selectedDate = selectedDate
+//        ).map { listEntity  ->
+//            listEntity.map { it.toLeave() }
+//        }
+//    }
+
+    override fun getUserLeave(selectedDate: Date): Flow<List<Leave>>{
+        return userLeaveDao.getUserLeave(
             selectedDate = selectedDate
         ).map { listEntity  ->
             listEntity.map { it.toLeave() }
@@ -35,13 +43,15 @@ class UsersRepository(private val userLeaveDao: UserLeaveDao) : UserRepo {
     }
 }
 
+
 interface UserRepo {
 
     suspend fun addUser(user: User)
     suspend fun getUser(email: String, password: String): User?
     suspend fun getUser(email: String): User?
+    fun getUserLeave(selectedDate: Date): Flow<List<Leave>>
     suspend fun addLeave(leave: LeaveEntity)
 
-    fun getLeave(selectedDate: Date): Flow<List<Leave>>
+//    fun getLeave(selectedDate: Date): Flow<List<Leave>>
 }
 

@@ -65,7 +65,7 @@ fun LeaveCard(
 
                 //todo - change to user name
                 Text(
-                    text = leave.email,
+                    text = "${leave.firstName} ${leave.lastName}",
                     fontWeight = FontWeight.Bold,
                     style = MaterialTheme.typography.titleLarge
                 )
@@ -133,6 +133,8 @@ fun CardPreview() {
             122,
             123,
             TypeOfLeave.Annual,
+            "Tom",
+            "Marge"
         )
     )
 }

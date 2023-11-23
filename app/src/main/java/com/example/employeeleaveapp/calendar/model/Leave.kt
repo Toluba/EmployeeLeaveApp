@@ -11,4 +11,6 @@ data class Leave(
     val startDate: Long,
     val endDate: Long,
     val typeOfLeave: TypeOfLeave,
+    val firstName: String,
+    val lastName: String
 ) : Parcelable

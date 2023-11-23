@@ -23,8 +23,9 @@ interface UserLeaveDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addLeave(leave: LeaveEntity)
 
-    @Query("SELECT * FROM leave WHERE startDate <=  :selectedDate AND endDate >= :selectedDate")
-   // fun getLeave(startDate: Date, endDate: Date): Flow<List<LeaveEntity>>
+    @Query("SELECT * FROM users,leave WHERE startDate <=  :selectedDate AND endDate >= :selectedDate AND users.email = leave.email")
+    fun getUserLeave(selectedDate: Date): Flow<List<UserLeaveEntity>>
 
+    @Query("SELECT * FROM leave WHERE startDate <=  :selectedDate AND endDate >= :selectedDate")
     fun getLeave(selectedDate: Date): Flow<List<LeaveEntity>>
 }

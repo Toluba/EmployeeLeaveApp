@@ -34,8 +34,10 @@ class UserLeaveViewModel(private val usersRepository: UserRepo) : ViewModel() {
 //        loadLeaveRequest()
 //    }
 
-    suspend fun signupUser(user: User) {
-        usersRepository.addUser(user)
+   fun signupUser(user: User) {
+       viewModelScope.launch(Dispatchers.IO) {
+           usersRepository.addUser(user)
+       }
     }
 
     private suspend fun loginUser(email: String, password: String) {
@@ -81,7 +83,7 @@ class UserLeaveViewModel(private val usersRepository: UserRepo) : ViewModel() {
     fun loadLeaveRequest(selectedDate: Date) {
         viewModelScope.launch() {
 
-            usersRepository.getLeave(selectedDate).collect {
+            usersRepository.getUserLeave(selectedDate).collect {
                 _leaves.value = it
             }
 

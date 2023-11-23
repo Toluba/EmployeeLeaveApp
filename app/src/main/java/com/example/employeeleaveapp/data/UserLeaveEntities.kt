@@ -23,6 +23,18 @@ data class LeaveEntity(
     val typeOfLeave: TypeOfLeave,
 )
 
+
+data class UserLeaveEntity(
+    val email: String,
+    val firstName: String,
+    val lastName: String,
+    val password: String?="",
+    val id: Int = 0,
+    val startDate: Long,
+    val endDate: Long,
+    val typeOfLeave: TypeOfLeave,
+)
+
 enum class TypeOfLeave{
     Annual, Sick, KDay
 }

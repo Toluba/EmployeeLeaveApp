@@ -30,6 +30,7 @@ import com.example.employeeleaveapp.components.HeadingTextComponent
 import com.example.employeeleaveapp.components.MyTextFieldComponent
 import com.example.employeeleaveapp.components.NormalTextComponent
 import com.example.employeeleaveapp.components.PasswordTextFieldComponent
+import com.example.employeeleaveapp.data.User
 import com.example.employeeleaveapp.ui.theme.Home
 
 //TODO - add navigation into the onclicks etc
@@ -43,7 +44,7 @@ fun LoginScreen(
     //modifier: Modifier = Modifier
 ) {
     val loggedIn by userLeaveViewModel.loggedIn.collectAsState()
-    if (loggedIn){
+    if (loggedIn) {
         navController.navigate(Home.route)
     }
     LoginScreenContent(userLeaveViewModel)
@@ -69,7 +70,20 @@ private fun LoginScreenContent(userLeaveViewModel: UserLeaveViewModel) {
             Spacer(modifier = Modifier.height(80.dp))
             ButtonComponent(
                 value = "Login",
-                onClick = { userLeaveViewModel.onLoginClick("tom@aol.com", "hello") }
+                onClick = { userLeaveViewModel.onLoginClick("tom@gmail.com", "hello") }
+            )
+
+            ButtonComponent(
+                value = "Sign Up",
+                onClick = {
+                    userLeaveViewModel.signupUser(
+                        User(
+                            "tom@gmail.com",
+                            "Tom",
+                            "Mike",
+                            "hello"
+                        ))
+                }
             )
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -89,5 +103,5 @@ private fun LoginScreenContent(userLeaveViewModel: UserLeaveViewModel) {
 @Preview
 @Composable
 fun LoginScreenPreview() {
-   // LoginScreen(userViewModel = UserViewModel())
+    // LoginScreen(userViewModel = UserViewModel())
 }
