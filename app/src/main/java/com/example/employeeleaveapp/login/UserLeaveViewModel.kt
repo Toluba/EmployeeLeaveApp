@@ -7,7 +7,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.employeeleaveapp.EmployeeLeaveApplication
-import com.example.employeeleaveapp.data.Leave
+import com.example.employeeleaveapp.calendar.model.Leave
+import com.example.employeeleaveapp.data.LeaveEntity
 import com.example.employeeleaveapp.data.TypeOfLeave
 import com.example.employeeleaveapp.data.User
 import com.example.employeeleaveapp.data.UserRepo
@@ -15,6 +16,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import java.util.Date
 
 class UserLeaveViewModel(private val usersRepository: UserRepo) : ViewModel() {
     private val _loggedIn = MutableStateFlow(false)
@@ -22,8 +24,15 @@ class UserLeaveViewModel(private val usersRepository: UserRepo) : ViewModel() {
         get() = _loggedIn
 
     private val _snackbarVisible = MutableStateFlow(false)
-    val snackbarVisible : StateFlow<Boolean>
+    val snackbarVisible: StateFlow<Boolean>
         get() = _snackbarVisible
+
+    private val _leaves = MutableStateFlow<List<Leave>>(emptyList())
+    val leaves: StateFlow<List<Leave>>
+        get() = _leaves
+//    init {
+//        loadLeaveRequest()
+//    }
 
     suspend fun signupUser(user: User) {
         usersRepository.addUser(user)
@@ -46,7 +55,7 @@ class UserLeaveViewModel(private val usersRepository: UserRepo) : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             if (startTimestamp != null && endTimestamp != null) {
                 usersRepository.addLeave(
-                    Leave(
+                    LeaveEntity(
                         email = "tom@gmail.com",
                         startDate = startTimestamp,
                         endDate = endTimestamp,
@@ -55,6 +64,27 @@ class UserLeaveViewModel(private val usersRepository: UserRepo) : ViewModel() {
                 )
                 _snackbarVisible.value = true
             }
+        }
+    }
+
+//    private val _isLeaveRequestSaved = MutableSharedFlow<Unit>()
+//    val isLeaveRequestSaved = _isLeaveRequestSaved.asSharedFlow()
+//
+//    fun addLeave( state: LeaveConfirmState) {
+//        viewModelScope.launch {
+//            val leave = state.leave
+//            val leaveAdded = usersRepository.addLeave(leave)
+//            _isLeaveRequestSaved.emit(leaveAdded)
+//        }
+
+
+    fun loadLeaveRequest(selectedDate: Date) {
+        viewModelScope.launch() {
+
+            usersRepository.getLeave(selectedDate).collect {
+                _leaves.value = it
+            }
+
         }
     }
 
@@ -71,3 +101,8 @@ class UserLeaveViewModel(private val usersRepository: UserRepo) : ViewModel() {
     }
 
 }
+
+
+data class LeaveConfirmState(
+    val leave: List<Leave>
+)

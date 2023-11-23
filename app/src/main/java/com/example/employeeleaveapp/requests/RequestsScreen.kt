@@ -2,6 +2,7 @@ package com.example.employeeleaveapp.requests
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -129,22 +130,26 @@ fun RequestScreen(
                                 "",
                                 Modifier.clickable { showBottomSheet = true })
                         },
-                        //interactionSource = interactionSource,
                         label = { Text("Start Date - End Date") }
                     )
 
                     Spacer(modifier = Modifier.height(30.dp))
-                    ElevatedButton(onClick = {
-                        userLeaveViewModel.onRequestSubmit(
-                            startDateMillis,
-                            endDateMillis
-                        )
-                    }
 
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
                     ) {
-                        Text("Submit")
-                    }
+                        ElevatedButton(onClick = {
+                            userLeaveViewModel.onRequestSubmit(
+                                startDateMillis,
+                                endDateMillis
+                            )
+                        }
 
+                        ) {
+                            Text("Submit")
+                        }
+                    }
                     if (showBottomSheet) {
                         ModalBottomSheet(
                             onDismissRequest = {

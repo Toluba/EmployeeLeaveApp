@@ -19,9 +19,9 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -29,30 +29,65 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.employeeleaveapp.calendar.data.CalendarDataSource
+import com.example.employeeleaveapp.calendar.model.CalendarModel
 import com.example.employeeleaveapp.extension.toFormattedDateShortString
 import com.example.employeeleaveapp.extension.toFormattedDateString
 import com.example.employeeleaveapp.extension.toFormattedMonthDateString
-import com.waseefakhtar.doseapp.feature.home.data.CalendarDataSource
-import com.waseefakhtar.doseapp.feature.home.model.CalendarModel
+import com.example.employeeleaveapp.login.UserLeaveViewModel
 import java.util.Calendar
 import java.util.Date
 
 
 @Composable
-fun CalendarScreen(){
-    Surface(){
-       DatesHeader(onDateSelected ={it})
+fun CalendarScreen(
+    userLeaveViewModel: UserLeaveViewModel = viewModel(factory = UserLeaveViewModel.Factory),
+) {
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        val viewState = userLeaveViewModel.leaves
+//        DailyLeave(viewState, userLeaveViewModel::loadLeaveRequest)
+        DailyLeave(userLeaveViewModel, userLeaveViewModel::loadLeaveRequest)
 
     }
 }
 
+@Composable
+//fun DailyLeave(state: CalendarState, loadLeaveRequest: (Date) -> Unit) {
+    fun DailyLeave(vm: UserLeaveViewModel, loadLeaveRequest: (Date) -> Unit) {
+    val filteredLeaveRequestEntities by vm.leaves.collectAsState()
+
+
+    DatesHeader { selectedDate ->
+       // val newLeaveList = state.leaveEntityList
+//        val newLeaveList = loadLeaveRequest()
+//            .filter { leave ->
+//                leave.startDate.toFormattedDateString() == selectedDate.date.toFormattedDateString()
+//            }
+//            .sortedBy { it.startDate }
+        loadLeaveRequest(selectedDate.date)
+//        filteredLeaveRequestEntities = newLeaveList
+    }
+
+    if (filteredLeaveRequestEntities.isEmpty()) {
+        EmptyCard()
+    } else {
+        Column(
+            modifier = Modifier,
+        ) {
+            filteredLeaveRequestEntities.forEach{
+                LeaveCard(
+                    leave = it,
+                )
+            }
+        }
+    }
+}
 
 @Composable
 fun DatesHeader(
-    onDateSelected: (CalendarModel.DateModel) -> Unit // Callback to pass the selected date
+    onDateSelected: (CalendarModel.DateModel) -> Unit
 ) {
     val dataSource = CalendarDataSource()
     var calendarModel by remember { mutableStateOf(dataSource.getData(lastSelectedDate = dataSource.today)) }
@@ -64,26 +99,28 @@ fun DatesHeader(
         DateHeader(
             data = calendarModel,
             onPrevClickListener = { startDate ->
-                // refresh the CalendarModel with new data
-                // by get data with new Start Date (which is the startDate-1 from the visibleDates)
                 val calendar = Calendar.getInstance()
                 calendar.time = startDate
 
-                calendar.add(Calendar.DAY_OF_YEAR, -2) // Subtract one day from startDate
+                calendar.add(Calendar.DAY_OF_YEAR, -2)
                 val finalStartDate = calendar.time
 
-                calendarModel = dataSource.getData(startDate = finalStartDate, lastSelectedDate = calendarModel.selectedDate.date)
+                calendarModel = dataSource.getData(
+                    startDate = finalStartDate,
+                    lastSelectedDate = calendarModel.selectedDate.date
+                )
             },
             onNextClickListener = { endDate ->
-                // refresh the CalendarModel with new data
-                // by get data with new Start Date (which is the endDate+2 from the visibleDates)
                 val calendar = Calendar.getInstance()
                 calendar.time = endDate
 
                 calendar.add(Calendar.DAY_OF_YEAR, 2)
                 val finalStartDate = calendar.time
 
-                calendarModel = dataSource.getData(startDate = finalStartDate, lastSelectedDate = calendarModel.selectedDate.date)
+                calendarModel = dataSource.getData(
+                    startDate = finalStartDate,
+                    lastSelectedDate = calendarModel.selectedDate.date
+                )
             }
         )
         DateList(
@@ -136,8 +173,6 @@ fun DateItem(
                 .padding(vertical = 4.dp, horizontal = 4.dp)
                 .clickable { onClickListener(date) },
             colors = CardDefaults.cardColors(
-                // background colors of the selected date
-                // and the non-selected date are different
                 containerColor = if (date.isSelected) {
                     MaterialTheme.colorScheme.tertiary
                 } else {
@@ -150,9 +185,9 @@ fun DateItem(
                     .width(42.dp)
                     .height(42.dp)
                     .padding(8.dp)
-                    .fillMaxSize(), // Fill the available size in the Column
-                verticalArrangement = Arrangement.Center, // Center vertically
-                horizontalAlignment = Alignment.CenterHorizontally // Center horizontally
+                    .fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
                     text = date.date.toFormattedDateShortString(),
@@ -211,9 +246,4 @@ fun DateHeader(
     }
 }
 
-@Preview()
-@Composable
-private fun Example3Preview() {
-    CalendarScreen()
 
-}

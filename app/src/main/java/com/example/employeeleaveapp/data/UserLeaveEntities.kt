@@ -14,7 +14,7 @@ data class User(
 )
 
 @Entity(tableName = "leave")
-data class Leave(
+data class LeaveEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val email: String,

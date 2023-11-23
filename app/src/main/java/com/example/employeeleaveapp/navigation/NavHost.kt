@@ -1,17 +1,17 @@
 package com.example.employeeleaveapp.navigation
 
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavController
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.employeeleaveapp.calendar.CalendarScreen
 import com.example.employeeleaveapp.home.HomeScreen
 import com.example.employeeleaveapp.login.LoginScreen
+import com.example.employeeleaveapp.login.UserLeaveViewModel
 import com.example.employeeleaveapp.requests.RequestScreen
 import com.example.employeeleaveapp.settings.SettingScreen
 import com.example.employeeleaveapp.ui.theme.Calendar
@@ -26,7 +26,8 @@ fun EmployeeLeaveAppNavHost(
     bottomBarVisibility: MutableState<Boolean>,
     topBarVisibility: MutableState<Boolean>,
     topBarText: MutableState<String>,
-    modifier: Modifier
+    modifier: Modifier,
+    userLeaveViewModel: UserLeaveViewModel = viewModel(factory = UserLeaveViewModel.Factory)
 ){
     NavHost(
         navController = navController,
@@ -63,7 +64,7 @@ fun EmployeeLeaveAppNavHost(
                 topBarVisibility.value = Calendar.topBarVisibility
                 topBarText.value = Calendar.title
             }
-            CalendarScreen()
+            CalendarScreen(userLeaveViewModel)
         }
         composable(route = Settings.route) {
             LaunchedEffect(null) {
