@@ -20,7 +20,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -30,6 +29,7 @@ import com.example.employeeleaveapp.components.HeadingTextComponent
 import com.example.employeeleaveapp.components.MyTextFieldComponent
 import com.example.employeeleaveapp.components.NormalTextComponent
 import com.example.employeeleaveapp.components.PasswordTextFieldComponent
+import com.example.employeeleaveapp.data.User
 import com.example.employeeleaveapp.ui.theme.Home
 
 //TODO - add navigation into the onclicks etc
@@ -38,19 +38,18 @@ import com.example.employeeleaveapp.ui.theme.Home
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
-    userViewModel: UserViewModel = viewModel(factory = UserViewModel.Factory),
+    userLeaveViewModel: UserLeaveViewModel = viewModel(factory = UserLeaveViewModel.Factory),
     navController: NavController,
-    //modifier: Modifier = Modifier
 ) {
-    val loggedIn by userViewModel.loggedIn.collectAsState()
-    if (loggedIn){
+    val loggedIn by userLeaveViewModel.loggedIn.collectAsState()
+    if (loggedIn) {
         navController.navigate(Home.route)
     }
-    LoginScreenContent(userViewModel)
+    LoginScreenContent(userLeaveViewModel)
 }
 
 @Composable
-private fun LoginScreenContent(userViewModel: UserViewModel) {
+private fun LoginScreenContent(userLeaveViewModel: UserLeaveViewModel) {
     Surface(
         color = Color.White,
         modifier = Modifier
@@ -69,7 +68,20 @@ private fun LoginScreenContent(userViewModel: UserViewModel) {
             Spacer(modifier = Modifier.height(80.dp))
             ButtonComponent(
                 value = "Login",
-                onClick = { userViewModel.onLoginClick("tom@aol.com", "hello") }
+                onClick = { userLeaveViewModel.onLoginClick("tom@gmail.com", "hello") }
+            )
+
+            ButtonComponent(
+                value = "Sign Up",
+                onClick = {
+                    userLeaveViewModel.signupUser(
+                        User(
+                            "tom@gmail.com",
+                            "Tom",
+                            "Mike",
+                            "hello"
+                        ))
+                }
             )
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -83,11 +95,4 @@ private fun LoginScreenContent(userViewModel: UserViewModel) {
             )
         }
     }
-}
-
-
-@Preview
-@Composable
-fun LoginScreenPreview() {
-   // LoginScreen(userViewModel = UserViewModel())
 }

@@ -24,7 +24,6 @@ import com.example.employeeleaveapp.bottomNav.NavBar
 import com.example.employeeleaveapp.navigation.EmployeeLeaveAppNavHost
 import com.example.employeeleaveapp.ui.theme.EmployeeLeaveAppTheme
 import com.example.employeeleaveapp.ui.theme.Home
-import com.example.employeeleaveapp.ui.theme.Login
 import com.example.employeeleaveapp.ui.theme.employeeLeaveBottomBar
 
 class MainActivity : ComponentActivity() {
@@ -65,7 +64,6 @@ class MainActivity : ComponentActivity() {
                     )
                 },
                 topBar = {
-                    // TopBar()
                     AnimatedVisibility(
                         visible = topBarVisibility.value,
                         content = {
